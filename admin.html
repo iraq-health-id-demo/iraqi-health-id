@@ -97,6 +97,20 @@ async function login() {
   });
 
   if (error) {
+    alert("خطأ تسجيل الدخول: " + error.message);
+    console.error(error);
+    return;
+  }
+
+  showAdmin();
+}
+
+  const { data, error } = await client.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
     alert("تعذر تسجيل الدخول. تحقق من بيانات الحساب.");
     return;
   }
