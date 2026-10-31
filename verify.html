@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>التحقق من الهوية</title><link rel="stylesheet" href="style.css"></head>
+<body><header><div class="nav"><a class="brand" href="index.html">✚ الهوية الصحية</a><button id="langBtn" class="btn light">English</button></div></header>
+<main class="verify"><a href="index.html">← العودة للرئيسية</a><section class="panel"><div class="symbol">✓</div><span class="tag">خدمة التحقق الإلكتروني</span><h1>التحقق من الهوية الوظيفية</h1><p>يتم فحص الرمز والتحقق من حالة الهوية من الخادم.</p><div id="result" class="result">جارٍ التحقق...</div><p class="small">لا تعرض هذه الصفحة الاسم أو المعلومات الشخصية. النتيجة تجريبية ولا تُعد إثباتاً حكومياً.</p><button id="retry" class="btn light hidden">إعادة المحاولة</button></section></main>
+<footer>نظام الهوية الصحية — نسخة تجريبية</footer>
+<script>
+const ENDPOINT="https://xvwnkgutstkzaalbzyvi.supabase.co/functions/v1/verify-identity";
+// ضع هنا مفتاح Supabase Publishable/anon العام فقط. ممنوع وضع service_role أو secret key.
+const PUBLIC_KEY="PASTE_YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY_HERE";
+const result=document.getElementById("result"), retry=document.getElementById("retry");
+async function verify(){
+ retry.classList.add("hidden"); result.className="result"; result.textContent="جارٍ التحقق...";
+ const token=new URLSearchParams(location.search).get("token");
+ if(!token){result.classList.add("bad");result.textContent="تعذر إثبات صلاحية الهوية: رمز التحقق غير موجود.";retry.classList.remove("hidden");return;}
+ if(PUBLIC_KEY.startsWith("PASTE_")){result.classList.add("warn");result.textContent="لم تتم تهيئة مفتاح الاتصال العام بعد.";return;}
+ try{
+  const r=await fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json","apikey":PUBLIC_KEY},body:JSON.stringify({token})});
+  const d=await r.json();
+  if(r.ok&&d.valid===true&&d.status==="active"){result.classList.add("good");result.textContent="الهوية صالحة حسب سجل النظام التجريبي.";}
+  else if(d.status==="suspended"){result.classList.add("warn");result.textContent="الهوية موقوفة.";}
+  else if(d.status==="expired"){result.classList.add("warn");result.textContent="انتهت صلاحية الهوية.";}
+  else{result.classList.add("bad");result.textContent="تعذر إثبات صلاحية الهوية. الرمز غير معروف أو غير صالح.";}
+ }catch(e){result.classList.add("bad");result.textContent="تعذر إكمال التحقق حالياً. حاول لاحقاً.";}
+ retry.classList.remove("hidden");
+}
+retry.addEventListener("click",verify);document.getElementById("langBtn").addEventListener("click",()=>alert("سنفعّل الترجمة الكاملة في الخطوة التالية."));verify();
+</script></body></html>
