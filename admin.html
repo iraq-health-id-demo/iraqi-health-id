@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>إدارة الهوية الوظيفية</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f1f3f5;
+  margin: 0;
+  padding: 20px;
+}
+.container {
+  max-width: 500px;
+  margin: 25px auto;
+  background: white;
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 3px 15px #0001;
+}
+h2 { text-align: center; color: #173b35; }
+input, button {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 13px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+button {
+  background: #176b55;
+  color: white;
+  border: 0;
+  cursor: pointer;
+}
+.hidden { display: none; }
+#qrcode { display: flex; justify-content: center; margin: 20px; }
+#result { text-align: center; overflow-wrap: anywhere; }
+</style>
+</head>
+
+<body>
+<div class="container">
+<h2>نظام إدارة الهوية الوظيفية</h2>
+<p style="text-align:center">لوحة تحكم المدير - نسخة تجريبية</p>
+
+<div id="loginBox">
+<h3>تسجيل دخول المدير</h3>
+<input id="email" type="email" placeholder="البريد الإلكتروني">
+<input id="password" type="password" placeholder="كلمة المرور">
+<button onclick="login()">تسجيل الدخول</button>
+</div>
+
+<div id="adminBox" class="hidden">
+<h3>إصدار هوية جديدة</h3>
+
+<input id="fullName" placeholder="الاسم الكامل" required>
+<input id="jobTitle" placeholder="المسمى الوظيفي">
+<input id="directorate" placeholder="الدائرة">
+<input id="workplace" placeholder="مكان العمل">
+<label>تاريخ انتهاء الهوية</label>
+<input id="expiryDate" type="date">
+
+<button onclick="issueIdentity()">إصدار الهوية</button>
+<button onclick="logout()" style="background:#777">تسجيل الخروج</button>
+
+<div id="result"></div>
+<div id="qrcode"></div>
+</div>
+</div>
+
+<script>
+const SUPABASE_URL =
+"https://xvwnkgutstkzaalbzyvi.supabase.co";
+
+// ضع هنا Publishable key نفسه الموجود في verify.html
+const SUPABASE_KEY = "sb_publishable_Ncyt-vd0cYpqHH5t6kBZCQ_LG6Cio4t";
+
+const client = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+async function login() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  const { data, error } = await client.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    alert("تعذر تسجيل الدخول. تحقق من بيانات الحساب.");
+    return;
+  }
+
+  showAdmin();
+}
+
+function showAdmin() {
+  document.getElementById("loginBox").classList.add("hidden");
+  document.getElementById("adminBox").classList.remove("hidden");
+}
+
+async function logout() {
+  await client.auth.signOut();
+  location.reload();
+}
+
+async function issueIdentity() {
+  const fullName = document.getElementById("fullName").value.trim();
+
+  if (!fullName) {
+    alert("يرجى إدخال اسم الموظف");
+    return;
+  }
+
+  const { data: sessionData } = await client.auth.getSession();
+  const session = sessionData.session;
+
+  if (!session) {
+    alert("انتهت جلسة الدخول. سجل الدخول مجدداً.");
+    location.reload();
+    return;
+  }
+
+  const result = document.getElementById("result");
+  const qr = document.getElementById("qrcode");
+
+  result.textContent = "جارٍ إصدار الهوية...";
+  qr.innerHTML = "";
+
+  const response = await fetch(
+    SUPABASE_URL + "/functions/v1/issue-identity",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + session.access_token
+      },
+      body: JSON.stringify({
+        full_name: fullName,
+        job_title: document.getElementById("jobTitle").value,
+        directorate: document.getElementById("directorate").value,
+        workplace: document.getElementById("workplace").value,
+        expiry_date: document.getElementById("expiryDate").value
+      })
+    }
+  );
+
+  const data = await response.json();
+if (!response.ok || !data.success) {
+    result.textContent = "فشل الإصدار: " + (data.error || "خطأ غير معروف");
+    return;
+  }
+
+  result.textContent =
+    "تم إصدار الهوية بنجاح. احتفظ بالرمز ولا تشاركه إلا مع صاحب الهوية.";
+
+  new QRCode(qr, {
+    text: data.verify_url,
+    width: 190,
+    height: 190
+  });
+
+  const link = document.createElement("a");
+  link.href = data.verify_url;
+  link.textContent = "فتح صفحة التحقق";
+  link.target = "_blank";
+  link.rel = "noopener";
+  result.appendChild(document.createElement("br"));
+  result.appendChild(link);
+
+  const copyButton = document.createElement("button");
+  copyButton.textContent = "نسخ رابط التحقق";
+  copyButton.onclick = () =>
+    navigator.clipboard.writeText(data.verify_url);
+  result.appendChild(copyButton);
+}
+
+async function checkSession() {
+  const { data } = await client.auth.getSession();
+  if (data.session) showAdmin();
+}
+
+checkSession();
+</script>
+</body>
+</html>
