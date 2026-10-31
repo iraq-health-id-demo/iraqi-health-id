@@ -137,6 +137,7 @@ async function issueIdentity() {
   result.textContent = "جارٍ إصدار الهوية...";
   qr.innerHTML = "";
 
+  try {
   const response = await fetch(
     SUPABASE_URL + "/functions/v1/issue-identity",
     {
@@ -156,8 +157,46 @@ async function issueIdentity() {
     }
   );
 
-  const data = await response.json();
-if (!response.ok || !data.success) {
+  const responseText = await response.text();
+  let data;
+
+  try {
+    data = JSON.parse(responseText);
+  } catch {
+    throw new Error("استجابة غير مفهومة من الخادم: " + responseText.slice(0, 300));
+  }
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.error || "HTTP " + response.status);
+  }
+
+  result.textContent =
+    "تم إصدار الهوية بنجاح. احتفظ بالرمز ولا تشاركه.";
+
+  new QRCode(qr, {
+    text: data.verify_url,
+    width: 190,
+    height: 190
+  });
+
+  const link = document.createElement("a");
+  link.href = data.verify_url;
+  link.textContent = "فتح صفحة التحقق";
+  link.target = "_blank";
+  link.rel = "noopener";
+  result.appendChild(document.createElement("br"));
+  result.appendChild(link);
+
+  const copyButton = document.createElement("button");
+  copyButton.textContent = "نسخ رابط التحقق";
+  copyButton.onclick = () =>
+    navigator.clipboard.writeText(data.verify_url);
+  result.appendChild(copyButton);
+
+} catch (error) {
+  result.textContent = "تعذر إصدار الهوية: " + error.message;
+  console.error("Issue identity error:", error);
+}
     result.textContent = "فشل الإصدار: " + (data.error || "خطأ غير معروف");
     return;
   }
