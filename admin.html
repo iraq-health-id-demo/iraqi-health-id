@@ -137,7 +137,6 @@ async function issueIdentity() {
   result.textContent = "جارٍ إصدار الهوية...";
   qr.innerHTML = "";
 
-  try {
   const response = await fetch(
     SUPABASE_URL + "/functions/v1/issue-identity",
     {
