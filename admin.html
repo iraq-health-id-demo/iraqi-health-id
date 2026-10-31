@@ -54,9 +54,7 @@ button {
 <h3>تسجيل دخول المدير</h3>
 <input id="email" type="email" placeholder="البريد الإلكتروني">
 <input id="password" type="password" placeholder="كلمة المرور">
-<<button onclick="alert('زر تسجيل الدخول يعمل')">
-  تسجيل الدخول
-</button>
+<<button onclick="login()">تسجيل الدخول</button>
 </div>
 
 <div id="adminBox" class="hidden">
@@ -90,9 +88,12 @@ const client = supabase.createClient(
 );
 
 async function login() {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-
+  <button onclick="alert(
+  'login: ' + typeof login +
+  ' | client: ' + typeof client
+)">
+  فحص تسجيل الدخول
+</button>
   const { data, error } = await client.auth.signInWithPassword({
     email,
     password
