@@ -1,252 +1,1502 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>إدارة الهوية الوظيفية</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#073b50">
+  <title>لوحة إدارة الهوية الوظيفية الصحية</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #073b50;
+      --navy2: #0b5368;
+      --teal: #12a6a0;
+      --teal-light: #e6f7f5;
+      --bg: #f3f7f9;
+      --white: #fff;
+      --text: #18313c;
+      --muted: #71838c;
+      --border: #dce7eb;
+      --danger: #c0392b;
+      --success: #16845d;
+      --shadow: 0 12px 35px rgba(7,59,80,.08);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Cairo", sans-serif;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button { cursor: pointer; }
+
+    .hidden { display: none !important; }
+
+    .topbar {
+      background: linear-gradient(120deg,var(--navy),var(--navy2));
+      color: white;
+      padding: 17px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.14);
+      font-size: 23px;
+    }
+
+    .brand h1 {
+      font-size: 17px;
+      margin: 0;
+      font-weight: 800;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      font-size: 11px;
+      color: #c5e3e9;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 1250px;
+      padding: 28px 18px 60px;
+      margin: auto;
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .section-title {
+      margin: 0 0 5px;
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 0 0 22px;
+    }
+
+    .login-wrap {
+      max-width: 440px;
+      margin: 65px auto;
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .login-logo .symbol {
+      width: 72px;
+      height: 72px;
+      margin: auto auto 12px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      background: var(--navy);
+      color: white;
+      font-size: 32px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 16px;
+    }
+
+    .field { min-width: 0; }
+
+    .field.full { grid-column: 1 / -1; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 7px;
+      color: #29434e;
+    }
+
+    input, select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fbfdfe;
+      color: var(--text);
+      padding: 12px 13px;
+      outline: none;
+      transition: .2s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(18,166,160,.11);
+    }
+
+    input[type="file"] {
+      padding: 9px;
+      font-size: 12px;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 5px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 18px;
+      font-weight: 700;
+      transition: .2s;
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: white;
+    }
+
+    .btn-primary:hover { background: #0b8d88; }
+
+    .btn-dark {
+      background: var(--navy);
+      color: white;
+    }
+
+    .btn-light {
+      background: #edf4f6;
+      color: var(--navy);
+    }
+
+    .btn-danger {
+      background: #fff0ef;
+      color: var(--danger);
+    }
+
+    .btn-block { width: 100%; }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .notice {
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 15px 0;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .notice.info {
+      background: #eaf5f9;
+      color: #24576b;
+    }
+
+    .notice.warning {
+      background: #fff7e6;
+      color: #805a15;
+    }
+
+    .notice.error {
+      background: #fff0ef;
+      color: #a93226;
+    }
+
+    .notice.success {
+      background: #e9f8f0;
+      color: #176c4b;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .toolbar .meta {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #22b879;
+      border-radius: 50%;
+      margin-left: 5px;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 22px;
+      align-items: start;
+      margin-top: 25px;
+    }
+
+    .preview-side h3 {
+      color: var(--navy);
+      font-size: 14px;
+      margin: 0 0 10px;
+    }
+
+    .identity-card {
+      width: 100%;
+      max-width: 430px;
+      aspect-ratio: 85.6 / 54;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      color: #173a48;
+      background: #e8f7f8;
+      border: 1px solid #a9d5dc;
+      box-shadow: 0 8px 24px rgba(0,0,0,.12);
+      direction: rtl;
+      margin: auto;
+    }
+
+    .card-head {
+      height: 22%;
+      padding: 3% 4%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      background: linear-gradient(110deg,#07516a,#0d8b91);
+    }
+
+    .card-head strong {
+      font-size: clamp(8px,1.8vw,13px);
+      line-height: 1.5;
+    }
+
+    .card-head small {
+      display: block;
+      font-size: clamp(5px,1vw,8px);
+      opacity: .85;
+    }
+
+    .card-mark {
+      width: 12%;
+      height: 80%;
+      border-radius: 9px;
+      background: rgba(255,255,255,.17);
+      display: grid;
+      place-items: center;
+      font-size: clamp(12px,3vw,22px);
+    }
+
+    .card-body {
+      height: 78%;
+      padding: 3% 4%;
+      display: flex;
+      gap: 4%;
+      position: relative;
+      background:
+        radial-gradient(circle at 80% 100%,rgba(14,160,164,.12),transparent 45%),
+        linear-gradient(140deg,#f4ffff,#d9f0f2);
+    }
+
+    .photo-box {
+      width: 25%;
+      height: 72%;
+      flex-shrink: 0;
+      background: #c8dfe3;
+      border: 2px solid white;
+      border-radius: 7px;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      color: #50727b;
+      font-size: 9px;
+      text-align: center;
+    }
+
+    .photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-info {
+      flex: 1;
+      min-width: 0;
+      font-size: clamp(6px,1.3vw,10px);
+      line-height: 1.65;
+      overflow: hidden;
+    }
+
+    .card-info .person-name {
+      font-weight: 800;
+      font-size: clamp(8px,1.8vw,13px);
+      color: #07516a;
+      margin-bottom: 3%;
+      overflow-wrap: anywhere;
+    }
+
+    .card-info .en-name {
+      direction: ltr;
+      text-align: right;
+      font-weight: 700;
+      color: #39717b;
+    }
+
+    .card-info .data-line {
+      border-bottom: 1px solid rgba(7,81,106,.13);
+      padding: 1% 0;
+      overflow-wrap: anywhere;
+    }
+
+    .card-info b { color: #07516a; }
+
+    .card-bottom {
+      position: absolute;
+      bottom: 3%;
+      right: 4%;
+      left: 4%;
+      border-top: 1px solid rgba(7,81,106,.2);
+      padding-top: 2%;
+      font-size: clamp(5px,1vw,8px);
+      display: flex;
+      justify-content: space-between;
+      gap: 5px;
+    }
+
+    .back-card {
+      background: linear-gradient(145deg,#f4ffff,#d9f0f2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 5%;
+    }
+
+    .back-band {
+      position: absolute;
+      top: 0;
+      height: 17%;
+      left: 0;
+      right: 0;
+      background: linear-gradient(110deg,#07516a,#0d8b91);
+    }
+
+    .qr-area {
+      position: relative;
+      margin-top: 4%;
+      background: white;
+      padding: 5px;
+      border-radius: 7px;
+      width: 34%;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+    }
+
+    .qr-area img, .qr-area canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .back-text {
+      position: relative;
+      font-size: clamp(6px,1.3vw,10px);
+      line-height: 1.8;
+      margin-top: 3%;
+      max-width: 90%;
+    }
+
+    .back-number {
+      font-weight: 800;
+      color: #07516a;
+    }
+
+    .print-note {
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      padding: 25px 10px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      border: 2px solid rgba(255,255,255,.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      vertical-align: middle;
+      margin-left: 7px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    [dir="ltr"] .field label { text-align: left; }
+    [dir="ltr"] .card-info { direction: ltr; }
+    [dir="ltr"] .card-info .person-name { text-align: left; }
+
+    @media(max-width:700px) {
+      .field-grid, .preview-grid { grid-template-columns: 1fr; }
+      .panel { padding: 17px; }
+      .container { padding: 18px 12px 40px; }
+      .login-wrap { margin: 30px auto; }
+    }
+
+    @media print {
+      @page {
+        size: 85.6mm 54mm;
+        margin: 0;
+      }
+
+      body {
+        background: white !important;
+        margin: 0 !important;
+      }
+
+      body * { visibility: hidden !important; }
+
+      #printArea, #printArea * {
+        visibility: visible !important;
+      }
+
+      #printArea {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 85.6mm;
+        margin: 0;
+        padding: 0;
+      }
+
+      .print-card {
+        width: 85.6mm !important;
+        height: 54mm !important;
+        max-width: none !important;
+        aspect-ratio: auto !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        page-break-after: always;
+        break-after: page;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .print-card:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+
+      .print-card * { visibility: visible !important; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-icon">✚</div>
+    <div>
+      <h1 id="headerTitle">نظام إدارة الهوية الوظيفية الصحية</h1>
+      <p id="headerSubtitle">لوحة المشرف – إصدار تجريبي</p>
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <button class="btn btn-light" id="languageBtn" type="button">English</button>
+    <button class="btn btn-danger hidden" id="logoutBtn" type="button">تسجيل الخروج</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- LOGIN -->
+  <section id="loginSection" class="login-wrap">
+    <div class="panel">
+      <div class="login-logo">
+        <div class="symbol">✚</div>
+        <h2 class="section-title" id="loginTitle">دخول المشرف</h2>
+        <p class="section-subtitle" id="loginSubtitle">يرجى تسجيل الدخول بحساب المشرف المصرح له</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="email" id="emailLabel">البريد الإلكتروني</label>
+          <input id="email" type="email" autocomplete="username" required>
+        </div>
+
+        <div class="field" style="margin-top:15px">
+          <label for="password" id="passwordLabel">كلمة المرور</label>
+          <input id="password" type="password" autocomplete="current-password" required>
+        </div>
+
+        <div id="loginMessage" aria-live="polite"></div>
+
+        <button class="btn btn-primary btn-block" id="loginBtn" type="submit" style="margin-top:20px">
+          تسجيل الدخول
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="adminSection" class="hidden">
+
+    <div class="panel">
+      <div class="toolbar">
+        <div>
+          <h2 class="section-title" id="welcomeTitle">إصدار هوية وظيفية جديدة</h2>
+          <p class="section-subtitle" id="welcomeSubtitle">أدخل بيانات الموظف بدقة قبل إصدار الهوية</p>
+        </div>
+        <div class="meta"><span class="status-dot"></span><span id="adminStatus">جلسة مشرف نشطة</span></div>
+      </div>
+
+      <div class="notice warning" id="experimentalNotice">
+        هذا النظام تجريبي مستقل، ولا يمثل اعتماداً أو تفويضاً رسمياً من وزارة الصحة أو أي جهة حكومية.
+      </div>
+
+      <form id="identityForm">
+        <div class="field-grid">
+
+          <div class="field">
+            <label for="full_name_ar" id="labelNameAr">الاسم الثلاثي – عربي *</label>
+            <input id="full_name_ar" name="full_name_ar" maxlength="150" required>
+          </div>
+
+          <div class="field">
+            <label for="full_name_en" id="labelNameEn">الاسم باللغة الإنجليزية *</label>
+            <input id="full_name_en" name="full_name_en" maxlength="150" required dir="ltr">
+          </div>
+
+          <div class="field">
+            <label for="job_title" id="labelJob">العنوان الوظيفي *</label>
+            <input id="job_title" name="job_title" maxlength="100" required>
+          </div>
+
+          <div class="field">
+            <label for="employee_number" id="labelEmployeeNo">الرقم الوظيفي</label>
+            <input id="employee_number" name="employee_number" maxlength="50">
+          </div>
+
+          <div class="field">
+            <label for="identity_number" id="labelIdentityNo">رقم الهوية *</label>
+            <input id="identity_number" name="identity_number" maxlength="50" required>
+          </div>
+
+          <div class="field">
+            <label for="directorate" id="labelDirectorate">الدائرة *</label>
+            <input id="directorate" name="directorate" maxlength="150" required>
+          </div>
+
+          <div class="field">
+            <label for="workplace" id="labelWorkplace">مكان العمل *</label>
+            <input id="workplace" name="workplace" maxlength="150" required>
+          </div>
+
+          <div class="field">
+            <label for="issue_date" id="labelIssueDate">تاريخ الإصدار *</label>
+            <input id="issue_date" name="issue_date" type="date" required>
+          </div>
+
+          <div class="field">
+            <label for="expiry_date" id="labelExpiryDate">تاريخ انتهاء الصلاحية *</label>
+            <input id="expiry_date" name="expiry_date" type="date" required>
+          </div>
+
+          <div class="field">
+            <label for="employeePhoto" id="labelPhoto">الصورة الشخصية</label>
+            <input id="employeePhoto" type="file" accept="image/jpeg,image/png,image/webp">
+            <div class="hint" id="photoHint">الصورة للمعاينة والطباعة في هذا المتصفح فقط، ولا تُرفع إلى قاعدة البيانات.</div>
+          </div>
+
+        </div>
+
+        <div id="formMessage" aria-live="polite"></div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" id="issueBtn" type="submit">إصدار الهوية</button>
+          <button class="btn btn-light" id="clearBtn" type="button">مسح الحقول</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- RESULT -->
+    <section id="resultSection" class="panel hidden">
+      <div class="toolbar">
+        <div>
+          <h2 class="section-title" id="resultTitle">تم إصدار الهوية</h2>
+          <p class="section-subtitle" id="resultSubtitle">راجع البيانات قبل الطباعة</p>
+        </div>
+        <span class="notice success" id="resultStatus">تم الحفظ بنجاح</span>
+      </div>
+
+      <div class="notice info" id="resultInfo">
+        احتفظ برابط التحقق ورمز QR بسرية مناسبة. لا تشارك رمز التحقق الخاص بالهوية في محادثات عامة.
+      </div>
+
+      <div class="preview-grid" id="printArea">
+        <div class="preview-side">
+          <h3 id="frontTitle">الوجه الأمامي</h3>
+          <div class="identity-card print-card" id="frontCard">
+            <div class="card-head">
+              <div>
+                <strong id="cardOrganization">الهوية الوظيفية الصحية</strong>
+                <small id="cardSubTitle">HEALTH EMPLOYEE ID</small>
+              </div>
+              <div class="card-mark">✚</div>
+            </div>
+            <div class="card-body">
+              <div class="photo-box" id="cardPhotoBox">PHOTO</div>
+              <div class="card-info">
+                <div class="person-name" id="cardNameAr">اسم الموظف</div>
+                <div class="en-name" id="cardNameEn">Employee Name</div>
+                <div class="data-line"><b id="cardJobLabel">العنوان الوظيفي:</b> <span id="cardJob">—</span></div>
+                <div class="data-line"><b>ID:</b> <span id="cardIdentity">—</span></div>
+                <div class="data-line"><b id="cardDirectorateLabel">الدائرة:</b> <span id="cardDirectorate">—</span></div>
+                <div class="data-line"><b id="cardWorkplaceLabel">مكان العمل:</b> <span id="cardWorkplace">—</span></div>
+              </div>
+              <div class="card-bottom">
+                <span id="cardIssue">إصدار: —</span>
+                <span id="cardExpiry">انتهاء: —</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-side">
+          <h3 id="backTitle">الوجه الخلفي</h3>
+          <div class="identity-card back-card print-card" id="backCard">
+            <div class="back-band"></div>
+            <div class="qr-area" id="qrArea"></div>
+            <div class="back-text">
+              <strong id="backVerifyTitle">التحقق من صحة الهوية</strong>
+              <div id="backVerifySubtitle">امسح رمز QR للتحقق من حالة الهوية</div>
+              <div class="back-number"><span id="backIdLabel">رقم الهوية:</span> <span id="backIdentity">—</span></div>
+              <div id="backExperimental">نظام تحقق تجريبي مستقل</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="print-note" id="printNote">
+        اطبع الوجهين على صفحتين منفصلتين بمقاس CR80، وتأكد من إعدادات الطابعة قبل اعتماد الطباعة.
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-dark" id="printBtn" type="button">طباعة الوجهين</button>
+        <button class="btn btn-light" id="copyLinkBtn" type="button">نسخ رابط التحقق</button>
+        <button class="btn btn-light" id="newIdentityBtn" type="button">إصدار هوية أخرى</button>
+      </div>
+    </section>
+
+  </section>
+</main>
+
+<footer class="footer" id="footerText">
+  نظام تجريبي مستقل لإدارة والتحقق من الهوية الوظيفية الصحية
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f1f3f5;
-  margin: 0;
-  padding: 20px;
-}
-.container {
-  max-width: 500px;
-  margin: 25px auto;
-  background: white;
-  padding: 22px;
-  border-radius: 14px;
-  box-shadow: 0 3px 15px #0001;
-}
-h2 { text-align: center; color: #173b35; }
-input, button {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 13px;
-  margin: 8px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-}
-button {
-  background: #176b55;
-  color: white;
-  border: 0;
-  cursor: pointer;
-}
-.hidden { display: none; }
-#qrcode { display: flex; justify-content: center; margin: 20px; }
-#result { text-align: center; overflow-wrap: anywhere; }
-</style>
-</head>
-
-<body>
-<div class="container">
-<h2>نظام إدارة الهوية الوظيفية</h2>
-<p style="text-align:center">لوحة تحكم المدير - نسخة تجريبية</p>
-
-<div id="loginBox">
-<h3>تسجيل دخول المدير</h3>
-<input id="email" type="email" placeholder="البريد الإلكتروني">
-<input id="password" type="password" placeholder="كلمة المرور">
-<<button onclick="login()">تسجيل الدخول</button>
-</div>
-
-<div id="adminBox" class="hidden">
-<h3>إصدار هوية جديدة</h3>
-
-<input id="fullName" placeholder="الاسم الكامل" required>
-<input id="jobTitle" placeholder="المسمى الوظيفي">
-<input id="directorate" placeholder="الدائرة">
-<input id="workplace" placeholder="مكان العمل">
-<label>تاريخ انتهاء الهوية</label>
-<input id="expiryDate" type="date">
-
-<button onclick="issueIdentity()">إصدار الهوية</button>
-<button onclick="logout()" style="background:#777">تسجيل الخروج</button>
-
-<div id="result"></div>
-<div id="qrcode"></div>
-</div>
-</div>
-
 <script>
-const SUPABASE_URL =
-"https://xvwnkgutstkzaalbzyvi.supabase.co";
+"use strict";
 
-// ضع هنا Publishable key نفسه الموجود في verify.html
-const SUPABASE_KEY = "sb_publishable_Ncyt-vd0cYpqHH5t6kBZCQ_LG6Cio4t";
+/* =========================================================
+   1. SUPABASE CONFIGURATION
+   المفتاح هنا Publishable فقط، وليس Service Role.
+========================================================= */
 
-const client = supabase.createClient(
+const SUPABASE_URL = "https://wdlaerlifmwyguyjzjew.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_jmBRnMzDnF-LRWEj9jVoPA_ZtZQExou";
+
+const VERIFY_PAGE_URL =
+  "https://iraq-health-id-demo.github.io/iraqi-health-id-v2/verify.html";
+
+const { createClient } = supabase;
+
+const supabaseClient = createClient(
   SUPABASE_URL,
-  SUPABASE_KEY
+  SUPABASE_PUBLISHABLE_KEY,
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  }
 );
 
-async function login() {
-  <button onclick="alert(
-  'login: ' + typeof login +
-  ' | client: ' + typeof client
-)">
-  فحص تسجيل الدخول
-</button> 
-  const { data, error } = await client.auth.signInWithPassword({
-    email,
-    password
-  });
+/* =========================================================
+   2. TRANSLATIONS
+========================================================= */
 
-  if (error) {
-    alert("خطأ تسجيل الدخول: " + error.message);
-    console.error(error);
-    return;
+const translations = {
+  ar: {
+    header: "نظام إدارة الهوية الوظيفية الصحية",
+    subtitle: "لوحة المشرف – إصدار تجريبي",
+    login: "دخول المشرف",
+    loginSub: "يرجى تسجيل الدخول بحساب المشرف المصرح له",
+    email: "البريد الإلكتروني",
+    password: "كلمة المرور",
+    signIn: "تسجيل الدخول",
+    signOut: "تسجيل الخروج",
+    issueTitle: "إصدار هوية وظيفية جديدة",
+    issueSub: "أدخل بيانات الموظف بدقة قبل إصدار الهوية",
+    active: "جلسة مشرف نشطة",
+    experimental: "هذا النظام تجريبي مستقل، ولا يمثل اعتماداً أو تفويضاً رسمياً من وزارة الصحة أو أي جهة حكومية.",
+    nameAr: "الاسم الثلاثي – عربي *",
+    nameEn: "الاسم باللغة الإنجليزية *",
+    job: "العنوان الوظيفي *",
+    employeeNo: "الرقم الوظيفي",
+    identityNo: "رقم الهوية *",
+    directorate: "الدائرة *",
+    workplace: "مكان العمل *",
+    issueDate: "تاريخ الإصدار *",
+    expiryDate: "تاريخ انتهاء الصلاحية *",
+    photo: "الصورة الشخصية",
+    photoHint: "الصورة للمعاينة والطباعة في هذا المتصفح فقط، ولا تُرفع إلى قاعدة البيانات.",
+    issue: "إصدار الهوية",
+    clear: "مسح الحقول",
+    result: "تم إصدار الهوية",
+    resultSub: "راجع البيانات قبل الطباعة",
+    saved: "تم الحفظ بنجاح",
+    front: "الوجه الأمامي",
+    back: "الوجه الخلفي",
+    print: "طباعة الوجهين",
+    copy: "نسخ رابط التحقق",
+    another: "إصدار هوية أخرى",
+    printNote: "اطبع الوجهين على صفحتين منفصلتين بمقاس CR80، وتأكد من إعدادات الطابعة قبل اعتماد الطباعة.",
+    verify: "التحقق من صحة الهوية",
+    verifySub: "امسح رمز QR للتحقق من حالة الهوية",
+    id: "رقم الهوية:",
+    issuePrefix: "إصدار:",
+    expiryPrefix: "انتهاء:",
+    footer: "نظام تجريبي مستقل لإدارة والتحقق من الهوية الوظيفية الصحية",
+    required: "يرجى ملء جميع الحقول المطلوبة.",
+    invalidDates: "تاريخ الانتهاء يجب أن يكون بعد تاريخ الإصدار.",
+    loginFailed: "تعذر تسجيل الدخول. تحقق من البيانات.",
+    unauthorized: "الحساب غير مصرح له باستخدام لوحة المشرف.",
+    issueFailed: "تعذر إصدار الهوية.",
+    photoInvalid: "نوع الصورة غير مدعوم. استخدم JPG أو PNG أو WEBP.",
+    photoLarge: "حجم الصورة يجب ألا يتجاوز 5 ميغابايت.",
+    photoReadError: "تعذرت قراءة الصورة.",
+    copied: "تم نسخ رابط التحقق.",
+    copyFailed: "تعذر نسخ الرابط.",
+    sessionExpired: "انتهت الجلسة. يرجى تسجيل الدخول مجدداً.",
+    qrFailed: "تعذر إنشاء رمز QR.",
+    loading: "جارٍ التنفيذ...",
+    connectionError: "تعذر الاتصال بالخدمة. تحقق من الإنترنت وحاول مجدداً.",
+    employeeNoHint: "اختياري. يجب أن يكون الرقم الوظيفي فريداً إذا أُدخل."
+  },
+
+  en: {
+    header: "Health Employee Identity Management",
+    subtitle: "Administrator Panel – Experimental",
+    login: "Administrator Login",
+    loginSub: "Sign in using an authorized administrator account",
+    email: "Email address",
+    password: "Password",
+    signIn: "Sign in",
+    signOut: "Sign out",
+    issueTitle: "Issue New Employee Identity",
+    issueSub: "Enter employee details carefully before issuing",
+    active: "Administrator session active",
+    experimental: "This is an independent experimental system. It is not officially approved or authorized by the Ministry of Health or any government entity.",
+    nameAr: "Full Name – Arabic *",
+    nameEn: "Full Name – English *",
+    job: "Job Title *",
+    employeeNo: "Employee Number",
+    identityNo: "Identity Number *",
+    directorate: "Directorate *",
+    workplace: "Workplace *",
+    issueDate: "Issue Date *",
+    expiryDate: "Expiry Date *",
+    photo: "Personal Photo",
+    photoHint: "Photo is used locally for preview and printing only. It is not uploaded to the database.",
+    issue: "Issue Identity",
+    clear: "Clear Fields",
+    result: "Identity Issued",
+    resultSub: "Review the details before printing",
+    saved: "Saved successfully",
+    front: "Front Side",
+    back: "Back Side",
+    print: "Print Both Sides",
+    copy: "Copy Verification Link",
+    another: "Issue Another Identity",
+    printNote: "Print both sides on separate pages at CR80 size. Check printer settings before printing.",
+    verify: "Verify Identity",
+    verifySub: "Scan the QR code to check identity status",
+    id: "Identity No:",
+    issuePrefix: "Issued:",
+    expiryPrefix: "Expires:",
+    footer: "Independent experimental health employee identity system",
+    required: "Please complete all required fields.",
+    invalidDates: "Expiry date must be after issue date.",
+    loginFailed: "Login failed. Check your credentials.",
+    unauthorized: "This account is not authorized to access the admin panel.",
+    issueFailed: "Could not issue the identity.",
+    photoInvalid: "Unsupported image type. Use JPG, PNG, or WEBP.",
+    photoLarge: "Image size must not exceed 5 MB.",
+    photoReadError: "Could not read the image.",
+    copied: "Verification link copied.",
+    copyFailed: "Could not copy the link.",
+    sessionExpired: "Session expired. Please sign in again.",
+    qrFailed: "Could not generate QR code.",
+    loading: "Processing...",
+    connectionError: "Service connection failed. Check your internet connection.",
+    employeeNoHint: "Optional. If provided, the employee number must be unique."
   }
+};
 
-  showAdmin();
+let language = "ar";
+let currentPhotoData = null;
+let currentVerificationUrl = null;
+let isSubmitting = false;
+
+const $ = id => document.getElementById(id);
+
+function t(key) {
+  return translations[language][key] || key;
 }
 
-  const { data, error } = await client.auth.signInWithPassword({
-    email,
-    password
+function setMessage(element, message, type = "error") {
+  element.className = "notice " + type;
+  element.textContent = message;
+  element.classList.remove("hidden");
+}
+
+function clearMessage(element) {
+  element.textContent = "";
+  element.className = "";
+}
+
+function setBusy(button, busy, label) {
+  button.disabled = busy;
+  button.innerHTML = busy
+    ? '<span class="spinner"></span>' + t("loading")
+    : label;
+}
+
+/* =========================================================
+   3. LANGUAGE
+========================================================= */
+
+function applyLanguage() {
+  const isArabic = language === "ar";
+
+  document.documentElement.lang = language;
+  document.documentElement.dir = isArabic ? "rtl" : "ltr";
+
+  const map = {
+    headerTitle: "header",
+    headerSubtitle: "subtitle",
+    loginTitle: "login",
+    loginSubtitle: "loginSub",
+    emailLabel: "email",
+    passwordLabel: "password",
+    loginBtn: "signIn",
+    logoutBtn: "signOut",
+    welcomeTitle: "issueTitle",
+    welcomeSubtitle: "issueSub",
+    adminStatus: "active",
+    experimentalNotice: "experimental",
+    labelNameAr: "nameAr",
+    labelNameEn: "nameEn",
+    labelJob: "job",
+    labelEmployeeNo: "employeeNo",
+    labelIdentityNo: "identityNo",
+    labelDirectorate: "directorate",
+    labelWorkplace: "workplace",
+    labelIssueDate: "issueDate",
+    labelExpiryDate: "expiryDate",
+    labelPhoto: "photo",
+    photoHint: "photoHint",
+    issueBtn: "issue",
+    clearBtn: "clear",
+    resultTitle: "result",
+    resultSubtitle: "resultSub",
+    resultStatus: "saved",
+    frontTitle: "front",
+    backTitle: "back",
+    backVerifyTitle: "verify",
+    backVerifySubtitle: "verifySub",
+    backIdLabel: "id",
+    cardJobLabel: "job",
+    cardDirectorateLabel: "directorate",
+    cardWorkplaceLabel: "workplace",
+    printBtn: "print",
+    copyLinkBtn: "copy",
+    newIdentityBtn: "another",
+    printNote: "printNote",
+    footerText: "footer"
+  };
+
+  Object.entries(map).forEach(([id,key]) => {
+    $(id).textContent = t(key);
   });
 
+  $("languageBtn").textContent = isArabic ? "English" : "العربية";
+
+  $("employee_number").placeholder = t("employeeNoHint");
+}
+
+$("languageBtn").addEventListener("click", () => {
+  language = language === "ar" ? "en" : "ar";
+  applyLanguage();
+});
+
+/* =========================================================
+   4. AUTHENTICATION AND ADMIN AUTHORIZATION
+========================================================= */
+
+async function checkAdminAuthorization() {
+  const { data: sessionData, error: sessionError } =
+    await supabaseClient.auth.getSession();
+
+  if (sessionError) throw sessionError;
+
+  const session = sessionData.session;
+  if (!session) return false;
+
+  const { data, error } = await supabaseClient.functions.invoke(
+    "check-admin",
+    { body: {} }
+  );
+
   if (error) {
-    alert("تعذر تسجيل الدخول. تحقق من بيانات الحساب.");
-    return;
+    console.error("CHECK ADMIN ERROR", error);
+    throw error;
   }
 
-  showAdmin();
+  if (!data || data.authorized !== true) {
+    throw new Error("ADMIN_NOT_AUTHORIZED");
+  }
+
+  return true;
 }
 
 function showAdmin() {
-  document.getElementById("loginBox").classList.add("hidden");
-  document.getElementById("adminBox").classList.remove("hidden");
+  $("loginSection").classList.add("hidden");
+  $("adminSection").classList.remove("hidden");
+  $("logoutBtn").classList.remove("hidden");
 }
 
-async function logout() {
-  await client.auth.signOut();
-  location.reload();
+function showLogin() {
+  $("adminSection").classList.add("hidden");
+  $("loginSection").classList.remove("hidden");
+  $("logoutBtn").classList.add("hidden");
+  $("resultSection").classList.add("hidden");
 }
 
-async function issueIdentity() {
-  const fullName = document.getElementById("fullName").value.trim();
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
 
-  if (!fullName) {
-    alert("يرجى إدخال اسم الموظف");
+  const button = $("loginBtn");
+  clearMessage($("loginMessage"));
+
+  const email = $("email").value.trim();
+  const password = $("password").value;
+
+  if (!email || !password) {
+    setMessage($("loginMessage"), t("required"));
     return;
   }
 
-  const { data: sessionData } = await client.auth.getSession();
-  const session = sessionData.session;
-
-  if (!session) {
-    alert("انتهت جلسة الدخول. سجل الدخول مجدداً.");
-    location.reload();
-    return;
-  }
-
-  const result = document.getElementById("result");
-  const qr = document.getElementById("qrcode");
-
-  result.textContent = "جارٍ إصدار الهوية...";
-  qr.innerHTML = "";
-
-  const response = await fetch(
-    SUPABASE_URL + "/functions/v1/issue-identity",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_KEY,
-        "Authorization": "Bearer " + session.access_token
-      },
-      body: JSON.stringify({
-        full_name: fullName,
-        job_title: document.getElementById("jobTitle").value,
-        directorate: document.getElementById("directorate").value,
-        workplace: document.getElementById("workplace").value,
-        expiry_date: document.getElementById("expiryDate").value
-      })
-    }
-  );
-
-  const responseText = await response.text();
-  let data;
+  setBusy(button, true, t("signIn"));
 
   try {
-    data = JSON.parse(responseText);
-  } catch {
-    throw new Error("استجابة غير مفهومة من الخادم: " + responseText.slice(0, 300));
+    const { error } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) throw error;
+
+    await checkAdminAuthorization();
+    showAdmin();
+
+  } catch (error) {
+    console.error("LOGIN ERROR", error);
+
+    await supabaseClient.auth.signOut();
+
+    const message = error.message === "ADMIN_NOT_AUTHORIZED"
+      ? t("unauthorized")
+      : (error.message || "").includes("FunctionsFetchError")
+        ? t("connectionError")
+        : t("loginFailed");
+
+    setMessage($("loginMessage"), message);
+
+  } finally {
+    setBusy(button, false, t("signIn"));
   }
+});
 
-  if (!response.ok || !data.success) {
-    throw new Error(data.error || "HTTP " + response.status);
+$("logoutBtn").addEventListener("click", async () => {
+  await supabaseClient.auth.signOut();
+  resetForm();
+  showLogin();
+});
+
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if (event === "SIGNED_OUT") {
+    showLogin();
   }
+});
 
-  result.textContent =
-    "تم إصدار الهوية بنجاح. احتفظ بالرمز ولا تشاركه.";
+/* =========================================================
+   5. SESSION INITIALIZATION
+========================================================= */
 
-  new QRCode(qr, {
-    text: data.verify_url,
-    width: 190,
-    height: 190
-  });
+async function initializeApp() {
+  applyLanguage();
 
-  const link = document.createElement("a");
-  link.href = data.verify_url;
-  link.textContent = "فتح صفحة التحقق";
-  link.target = "_blank";
-  link.rel = "noopener";
-  result.appendChild(document.createElement("br"));
-  result.appendChild(link);
+  try {
+    const authorized = await checkAdminAuthorization();
 
-  const copyButton = document.createElement("button");
-  copyButton.textContent = "نسخ رابط التحقق";
-  copyButton.onclick = () =>
-    navigator.clipboard.writeText(data.verify_url);
-  result.appendChild(copyButton);
+    if (authorized) {
+      showAdmin();
+    } else {
+      showLogin();
+    }
 
-} catch (error) {
-  result.textContent = "تعذر إصدار الهوية: " + error.message;
-  console.error("Issue identity error:", error);
+  } catch (error) {
+    console.info("No active authorized session:", error.message);
+    showLogin();
+  }
 }
-    result.textContent = "فشل الإصدار: " + (data.error || "خطأ غير معروف");
+
+/* =========================================================
+   6. FORM VALIDATION
+========================================================= */
+
+function getFormData() {
+  return {
+    full_name_ar: $("full_name_ar").value.trim(),
+    full_name_en: $("full_name_en").value.trim(),
+    job_title: $("job_title").value.trim(),
+    employee_number: $("employee_number").value.trim() || null,
+    identity_number: $("identity_number").value.trim(),
+    directorate: $("directorate").value.trim(),
+    workplace: $("workplace").value.trim(),
+    issue_date: $("issue_date").value,
+    expiry_date: $("expiry_date").value
+  };
+}
+
+function validateForm(data) {
+  const requiredFields = [
+    "full_name_ar",
+    "full_name_en",
+    "job_title",
+    "identity_number",
+    "directorate",
+    "workplace",
+    "issue_date",
+    "expiry_date"
+  ];
+
+  for (const key of requiredFields) {
+    if (!data[key]) return false;
+  }
+
+  if (data.expiry_date <= data.issue_date) {
+    throw new Error("INVALID_DATES");
+  }
+
+  return true;
+}
+
+/* =========================================================
+   7. LOCAL PHOTO PREVIEW
+========================================================= */
+
+$("employeePhoto").addEventListener("change", event => {
+  const file = event.target.files?.[0];
+
+  currentPhotoData = null;
+
+  if (!file) {
+    renderPhoto();
     return;
   }
 
-  result.textContent =
-    "تم إصدار الهوية بنجاح. احتفظ بالرمز ولا تشاركه إلا مع صاحب الهوية.";
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
 
-  new QRCode(qr, {
-    text: data.verify_url,
-    width: 190,
-    height: 190
+  if (!allowedTypes.includes(file.type)) {
+    event.target.value = "";
+    setMessage($("formMessage"), t("photoInvalid"));
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    event.target.value = "";
+    setMessage($("formMessage"), t("photoLarge"));
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    currentPhotoData = reader.result;
+    renderPhoto();
+  };
+
+  reader.onerror = () => {
+    setMessage($("formMessage"), t("photoReadError"));
+  };
+
+  reader.readAsDataURL(file);
+});
+
+function renderPhoto() {
+  const box = $("cardPhotoBox");
+  box.replaceChildren();
+
+  if (currentPhotoData) {
+    const image = document.createElement("img");
+    image.src = currentPhotoData;
+    image.alt = "Employee photo";
+    box.appendChild(image);
+  } else {
+    box.textContent = "PHOTO";
+  }
+}
+
+/* =========================================================
+   8. SAFE CARD PREVIEW
+========================================================= */
+
+function updateCard(data) {
+  $("cardNameAr").textContent = data.full_name_ar;
+  $("cardNameEn").textContent = data.full_name_en;
+  $("cardJob").textContent = data.job_title;
+  $("cardIdentity").textContent = data.identity_number;
+  $("cardDirectorate").textContent = data.directorate;
+  $("cardWorkplace").textContent = data.workplace;
+  $("cardIssue").textContent = t("issuePrefix") + " " + data.issue_date;
+  $("cardExpiry").textContent = t("expiryPrefix") + " " + data.expiry_date;
+  $("backIdentity").textContent = data.identity_number;
+
+  renderPhoto();
+}
+
+/* =========================================================
+   9. QR CODE
+========================================================= */
+
+function createQRCode(url) {
+  const area = $("qrArea");
+  area.replaceChildren();
+
+  if (typeof QRCode === "undefined") {
+    throw new Error("QR_LIBRARY_NOT_LOADED");
+  }
+
+  new QRCode(area, {
+    text: url,
+    width: 240,
+    height: 240,
+    colorDark: "#073b50",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.M
+  });
+}
+
+/* =========================================================
+   10. EDGE FUNCTION ERROR HANDLING
+========================================================= */
+
+async function extractFunctionError(error) {
+  let details = "";
+
+  try {
+    if (error?.context) {
+      if (typeof error.context.json === "function") {
+        const body = await error.context.json();
+        details = JSON.stringify(body);
+      } else if (typeof error.context.text === "function") {
+        details = await error.context.text();
+      }
+    }
+  } catch (_) {
+    // Keep the original error if the response body is unavailable.
+  }
+
+  console.error("EDGE FUNCTION ERROR", {
+    message: error?.message,
+    details
   });
 
-  const link = document.createElement("a");
-  link.href = data.verify_url;
-  link.textContent = "فتح صفحة التحقق";
-  link.target = "_blank";
-  link.rel = "noopener";
-  result.appendChild(document.createElement("br"));
-  result.appendChild(link);
+  if (details) {
+    try {
+      const parsed = JSON.parse(details);
+      return parsed.database_message ||
+        parsed.message ||
+        parsed.error ||
+        details;
+    } catch (_) {
+      return details;
+    }
+  }
 
-  const copyButton = document.createElement("button");
-  copyButton.textContent = "نسخ رابط التحقق";
-  copyButton.onclick = () =>
-    navigator.clipboard.writeText(data.verify_url);
-  result.appendChild(copyButton);
+  return error?.message || t("issueFailed");
 }
 
-async function checkSession() {
-  const { data } = await client.auth.getSession();
-  if (data.session) showAdmin();
+/* =========================================================
+   11. ISSUE IDENTITY
+========================================================= */
+
+$("identityForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (isSubmitting) return;
+
+  const button = $("issueBtn");
+  clearMessage($("formMessage"));
+
+  const data = getFormData();
+
+  try {
+    if (!validateForm(data)) {
+      setMessage($("formMessage"), t("required"));
+      return;
+    }
+  } catch (error) {
+    if (error.message === "INVALID_DATES") {
+      setMessage($("formMessage"), t("invalidDates"));
+      return;
+    }
+    throw error;
+  }
+
+  isSubmitting = true;
+  setBusy(button, true, t("issue"));
+
+  try {
+    const { data: sessionData } = await supabaseClient.auth.getSession();
+
+    if (!sessionData.session) {
+      throw new Error("SESSION_EXPIRED");
+    }
+
+    const { data: response, error } =
+      await supabaseClient.functions.invoke(
+        "issue-identity",
+        { body: data }
+      );
+
+    if (error) {
+      const detail = await extractFunctionError(error);
+      throw new Error(detail);
+    }
+
+    if (!response || response.success !== true) {
+      throw new Error(
+        response?.database_message ||
+        response?.message ||
+        response?.error ||
+        t("issueFailed")
+      );
+    }
+
+    if (!response.verify_url) {
+      throw new Error("The server did not return verify_url.");
+    }
+
+    const returnedUrl = new URL(response.verify_url);
+    const expectedUrl = new URL(VERIFY_PAGE_URL);
+
+    if (
+      returnedUrl.origin !== expectedUrl.origin ||
+      returnedUrl.pathname !== expectedUrl.pathname
+    ) {
+      throw new Error("The returned verification URL is not valid.");
+    }
+
+    currentVerificationUrl = response.verify_url;
+
+    updateCard(data);
+    createQRCode(currentVerificationUrl);
+
+    $("resultSection").classList.remove("hidden");
+    $("resultSection").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+    setMessage(
+      $("formMessage"),
+      language === "ar" ? "تم إصدار الهوية بنجاح." : "Identity issued successfully.",
+      "success"
+    );
+
+  } catch (error) {
+    console.error("ISSUE IDENTITY ERROR", error);
+
+    let message = error.message || t("issueFailed");
+
+    if (message === "SESSION_EXPIRED") {
+      message = t("sessionExpired");
+      await supabaseClient.auth.signOut();
+      showLogin();
+    } else if (
+      message.includes("Failed to fetch") ||
+      message.includes("FunctionsFetchError")
+    ) {
+      message = t("connectionError");
+    }
+
+    setMessage($("formMessage"), message);
+
+  } finally {
+    isSubmitting = false;
+    setBusy(button, false, t("issue"));
+  }
+});
+
+/* =========================================================
+   12. CLEAR AND RESET
+========================================================= */
+
+function resetForm() {
+  $("identityForm").reset();
+  currentPhotoData = null;
+  currentVerificationUrl = null;
+  $("resultSection").classList.add("hidden");
+  $("qrArea").replaceChildren();
+  renderPhoto();
+  clearMessage($("formMessage"));
 }
 
-checkSession();
+$("clearBtn").addEventListener("click", () => {
+  resetForm();
+});
+
+$("newIdentityBtn").addEventListener("click", () => {
+  resetForm();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+/* =========================================================
+   13. COPY VERIFICATION URL
+========================================================= */
+
+$("copyLinkBtn").addEventListener("click", async () => {
+  if (!currentVerificationUrl) return;
+
+  try {
+    await navigator.clipboard.writeText(currentVerificationUrl);
+    setMessage($("resultInfo"), t("copied"), "success");
+  } catch (error) {
+    console.error("COPY ERROR", error);
+    setMessage($("resultInfo"), t("copyFailed"), "error");
+  }
+});
+
+/* =========================================================
+   14. PRINT BOTH SIDES
+========================================================= */
+
+$("printBtn").addEventListener("click", () => {
+  if (!currentVerificationUrl) {
+    setMessage($("resultInfo"), t("issueFailed"), "error");
+    return;
+  }
+
+  window.print();
+});
+
+/* =========================================================
+   15. DEFAULT DATES
+========================================================= */
+
+function setDefaultDates() {
+  const today = new Date();
+  const localToday = new Date(
+    today.getTime() - today.getTimezoneOffset() * 60000
+  ).toISOString().slice(0,10);
+
+  $("issue_date").value = localToday;
+}
+
+/* =========================================================
+   16. START
+========================================================= */
+
+setDefaultDates();
+initializeApp();
+
 </script>
 </body>
 </html>
